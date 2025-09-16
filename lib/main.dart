@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:visually_impaired/routes/app_pages.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:visually_impaired/services/llm_service.dart';
 import 'package:visually_impaired/services/settings_service.dart';
 import 'package:visually_impaired/services/speech_service.dart';

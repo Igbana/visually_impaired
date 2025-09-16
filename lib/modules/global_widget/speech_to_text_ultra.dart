@@ -1,8 +1,5 @@
-import 'package:flutter_tts/flutter_tts_web.dart';
 import 'package:get/get.dart';
-import 'package:speech_to_text/speech_to_text.dart';
 import 'package:flutter/material.dart';
-import 'package:visually_impaired/services/llm_service.dart';
 import 'package:visually_impaired/services/speech_service.dart';
 
 class SpeechToTextUltra extends StatefulWidget {
@@ -29,32 +26,28 @@ class SpeechToTextUltra extends StatefulWidget {
 }
 
 class _SpeechToTextUltraState extends State<SpeechToTextUltra> {
-
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Obx(
-        () {
-          return Get.find<SpeechService>().isListening.value
-              ? IconButton(
-                  iconSize: widget.pauseIconSize,
-                  icon: widget.toPauseIcon!,
-                  color: widget.pauseIconColor,
-                  onPressed: () {
-                    Get.find<SpeechService>().stopListening();
-                  },
-                )
-              : IconButton(
-                  iconSize: widget.startIconSize,
-                  color: widget.startIconColor,
-                  icon: widget.toStartIcon!,
-                  onPressed: () {
-                    Get.find<SpeechService>().startListening();
-                  },
-                );
-        }
-      ),
+      child: Obx(() {
+        return Get.find<SpeechService>().isListening.value
+            ? IconButton(
+                iconSize: widget.pauseIconSize,
+                icon: widget.toPauseIcon!,
+                color: widget.pauseIconColor,
+                onPressed: () {
+                  Get.find<SpeechService>().stopListening();
+                },
+              )
+            : IconButton(
+                iconSize: widget.startIconSize,
+                color: widget.startIconColor,
+                icon: widget.toStartIcon!,
+                onPressed: () {
+                  Get.find<SpeechService>().startListening();
+                },
+              );
+      }),
     );
   }
-
 }

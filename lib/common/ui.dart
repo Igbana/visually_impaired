@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import '../services/settings_service.dart';
-import 'asset.dart';
 
 class Ui {
   static GetSnackBar SuccessSnackBar(
@@ -15,18 +14,18 @@ class Ui {
       titleText: Text(title.tr,
           style: Get.textTheme.titleLarge
               ?.merge(TextStyle(color: Get.theme.primaryColor))),
-      messageText: Text(message ?? '',
+      messageText: Text(message,
           style: Get.textTheme.bodySmall!
               .merge(TextStyle(color: Get.theme.primaryColor))),
       snackPosition: SnackPosition.BOTTOM,
-      margin: EdgeInsets.all(20),
+      margin: const EdgeInsets.all(20),
       backgroundColor: Colors.green,
       icon: Icon(Icons.check_circle_outline,
           size: 32, color: Get.theme.primaryColor),
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       borderRadius: 8,
       dismissDirection: DismissDirection.horizontal,
-      duration: Duration(seconds: 5),
+      duration: const Duration(seconds: 5),
     );
   }
 
@@ -37,17 +36,17 @@ class Ui {
       titleText: Text(title.tr,
           style: Get.textTheme.titleLarge
               ?.merge(TextStyle(color: Get.theme.primaryColor))),
-      messageText: Text(message?.substring(0, min(message.length, 200)) ?? '',
+      messageText: Text(message.substring(0, min(message.length, 200)),
           style: Get.textTheme.bodySmall!
               .merge(TextStyle(color: Get.theme.primaryColor))),
       snackPosition: SnackPosition.BOTTOM,
-      margin: EdgeInsets.all(20),
+      margin: const EdgeInsets.all(20),
       backgroundColor: Colors.redAccent,
       icon: Icon(Icons.remove_circle_outline,
           size: 32, color: Get.theme.primaryColor),
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       borderRadius: 8,
-      duration: Duration(seconds: 5),
+      duration: const Duration(seconds: 5),
     );
   }
 
@@ -58,18 +57,18 @@ class Ui {
       titleText: Text(title.tr,
           style: Get.textTheme.titleLarge
               ?.merge(TextStyle(color: Get.theme.hintColor))),
-      messageText: Text(message ?? '',
+      messageText: Text(message,
           style: Get.textTheme.bodySmall!
               .merge(TextStyle(color: Get.theme.focusColor))),
       snackPosition: SnackPosition.BOTTOM,
-      margin: EdgeInsets.all(20),
+      margin: const EdgeInsets.all(20),
       backgroundColor: Get.theme.primaryColor,
       borderColor: Get.theme.focusColor.withOpacity(0.1),
       icon: Icon(Icons.warning_amber_rounded,
           size: 32, color: Get.theme.hintColor),
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       borderRadius: 8,
-      duration: Duration(seconds: 5),
+      duration: const Duration(seconds: 5),
     );
   }
 
@@ -89,14 +88,14 @@ class Ui {
           style: Get.textTheme.bodySmall!
               .merge(TextStyle(color: Get.theme.focusColor))),
       snackPosition: SnackPosition.TOP,
-      margin: EdgeInsets.all(20),
+      margin: const EdgeInsets.all(20),
       backgroundColor: Get.theme.primaryColor,
       borderColor: Get.theme.focusColor.withOpacity(0.1),
       icon:
           Icon(Icons.notifications_none, size: 32, color: Get.theme.hintColor),
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       borderRadius: 8,
-      duration: Duration(seconds: 5),
+      duration: const Duration(seconds: 5),
     );
   }
 
@@ -105,42 +104,42 @@ class Ui {
       return Color(int.tryParse(hexCode!.replaceAll("#", "0xFF")) ?? 0)
           .withOpacity(opacity ?? 1);
     } catch (e) {
-      return Color(0xFFCCCCCC).withOpacity(opacity ?? 1);
+      return const Color(0xFFCCCCCC).withOpacity(opacity ?? 1);
     }
   }
 
   static List<Icon> getStarsList(double? rate, {double size = 18}) {
     var list = <Icon>[];
-    if (rate == null) rate = 0;
+    rate ??= 0;
     list = List.generate(rate.floor(), (index) {
-      return Icon(Icons.star, size: size, color: Color(0xFFFFB24D));
+      return Icon(Icons.star, size: size, color: const Color(0xFFFFB24D));
     });
     if (rate - rate.floor() > 0) {
-      list.add(Icon(Icons.star_half, size: size, color: Color(0xFFFFB24D)));
+      list.add(Icon(Icons.star_half, size: size, color: const Color(0xFFFFB24D)));
     }
     list.addAll(
         List.generate(5 - rate.floor() - (rate - rate.floor()).ceil(), (index) {
-      return Icon(Icons.star_border, size: size, color: Color(0xFFFFB24D));
+      return Icon(Icons.star_border, size: size, color: const Color(0xFFFFB24D));
     }));
     return list;
   }
 
   static Icon getStarReview(double? rate, {double size = 18}) {
     var icon;
-    if (rate == null) rate = 0;
+    rate ??= 0;
     if (rate == 5) {
-      icon = Icon(Icons.star, size: size, color: Color(0xFFFFB24D));
+      icon = Icon(Icons.star, size: size, color: const Color(0xFFFFB24D));
     } else if (rate - rate.floor() > 0) {
-      icon = Icon(Icons.star_half, size: size, color: Color(0xFFFFB24D));
+      icon = Icon(Icons.star_half, size: size, color: const Color(0xFFFFB24D));
     } else {
-      icon = Icon(Icons.star_border, size: size, color: Color(0xFFFFB24D));
+      icon = Icon(Icons.star_border, size: size, color: const Color(0xFFFFB24D));
     }
     return icon;
   }
 
   static Widget getPrice(double? myPrice,
       {TextStyle? style, String zeroPlaceholder = '-', String? unit}) {
-    var _setting = Get.find<SettingsService>();
+    var setting = Get.find<SettingsService>();
     if (style != null) {
       style = style.merge(TextStyle(fontSize: style.fontSize ?? 0 + 2));
     }
@@ -152,40 +151,40 @@ class Ui {
         softWrap: false,
         overflow: TextOverflow.fade,
         maxLines: 1,
-        text: _setting.setting.value.currencyRight != null &&
-                _setting.setting.value.currencyRight == false
+        text: setting.setting.value.currencyRight != null &&
+                setting.setting.value.currencyRight == false
             ? TextSpan(
-                text: _setting.setting.value.defaultCurrency,
+                text: setting.setting.value.defaultCurrency,
                 style: getPriceStyle(style ?? Get.textTheme.titleSmall!),
                 children: <TextSpan>[
                   TextSpan(
                       text: myPrice?.toStringAsFixed(
-                          _setting.setting.value.defaultCurrencyDecimalDigits ??
+                          setting.setting.value.defaultCurrencyDecimalDigits ??
                               0),
                       style: style ?? Get.textTheme.titleSmall!),
                   if (unit != null)
                     TextSpan(
-                        text: " " + unit + " ",
+                        text: " $unit ",
                         style:
                             getPriceStyle(style ?? Get.textTheme.titleSmall)),
                 ],
               )
             : TextSpan(
                 text: myPrice?.toStringAsFixed(
-                    _setting.setting.value.defaultCurrencyDecimalDigits ?? 0),
+                    setting.setting.value.defaultCurrencyDecimalDigits ?? 0),
                 style: style ?? Get.textTheme.titleSmall,
                 children: <TextSpan>[
                   TextSpan(
-                      text: _setting.setting.value.defaultCurrency,
+                      text: setting.setting.value.defaultCurrency,
                       style: getPriceStyle(style!)),
                   if (unit != null)
                     TextSpan(
-                        text: " " + unit + " ", style: getPriceStyle(style)),
+                        text: " $unit ", style: getPriceStyle(style)),
                 ],
               ),
       );
     } catch (e) {
-      return Text('');
+      return const Text('');
     }
   }
 
@@ -211,7 +210,7 @@ class Ui {
         BoxShadow(
             color: Get.theme.focusColor.withOpacity(0.1),
             blurRadius: 10,
-            offset: Offset(0, 5)),
+            offset: const Offset(0, 5)),
       ],
       border:
           border ?? Border.all(color: Get.theme.focusColor.withOpacity(0.05)),
@@ -235,7 +234,7 @@ class Ui {
           ? Icon(iconData, color: Get.theme.focusColor).marginOnly(right: 14)
           : iconPath != null
               ? Container(
-                  margin: EdgeInsets.only(right: 14, left: 2),
+                  margin: const EdgeInsets.only(right: 14, left: 2),
                   child: SvgPicture.asset(
                     iconPath,
                     width: 17,
@@ -246,13 +245,13 @@ class Ui {
                 )
               : null,
       prefixIconConstraints: iconData != null || iconPath != null
-          ? BoxConstraints.expand(width: 38, height: 38)
-          : BoxConstraints.expand(width: 0, height: 0),
+          ? const BoxConstraints.expand(width: 38, height: 38)
+          : const BoxConstraints.expand(width: 0, height: 0),
       floatingLabelBehavior: FloatingLabelBehavior.never,
-      contentPadding: EdgeInsets.all(0),
-      border: OutlineInputBorder(borderSide: BorderSide.none),
-      focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+      contentPadding: const EdgeInsets.all(0),
+      border: const OutlineInputBorder(borderSide: BorderSide.none),
+      focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+      enabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
       suffixIcon: suffixIcon,
       suffix: suffix,
       errorText: errorText,
@@ -332,11 +331,11 @@ class Ui {
   }
 
   static String getDistance(double distance) {
-    String _unit = Get.find<SettingsService>().setting.value.distanceUnit!;
-    if (_unit == 'km') {
+    String unit = Get.find<SettingsService>().setting.value.distanceUnit!;
+    if (unit == 'km') {
       distance *= 1.60934;
     }
-    return distance != null ? distance.toStringAsFixed(2) + " " + _unit.tr : "";
+    return "${distance.toStringAsFixed(2)} ${unit.tr}";
   }
 
   static bool isDesktop(BoxConstraints constraint) {

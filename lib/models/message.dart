@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:visually_impaired/models/model.dart';
 
 abstract class Message extends Model {
@@ -9,6 +7,7 @@ abstract class Message extends Model {
 
   Message.fromJson(Map<String, dynamic> json);
 
+  @override
   Map<String, dynamic> toJson();
 }
 

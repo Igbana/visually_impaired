@@ -2,11 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:siri_wave/siri_wave.dart';
 import 'package:visually_impaired/modules/global_widget/text_field.dart';
-
 import '../../global_widget/block_button_widget.dart';
-import '../../global_widget/speech_to_text_ultra.dart';
 import '../controllers/auth_controller.dart';
 
 class LoginView extends StatelessWidget {
