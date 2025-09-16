@@ -1,20 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
-import 'package:flutter_tts/flutter_tts_web.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:siri_wave/siri_wave.dart';
-import 'package:speech_to_text/speech_to_text.dart';
 import 'package:visually_impaired/common/helper.dart';
 import 'package:visually_impaired/models/message.dart';
 import 'package:visually_impaired/modules/auth/views/login.dart';
 import 'package:visually_impaired/repositories/llm_repository.dart';
 import 'package:visually_impaired/services/llm_service.dart';
 import 'package:visually_impaired/services/speech_service.dart';
-
-import '../../global_widget/text_field.dart';
 import '../views/register.dart';
 
 class AuthController extends GetxController {
@@ -59,9 +54,6 @@ class AuthController extends GetxController {
   late List screens;
   final screenIndex = 2.obs;
 
-  final _hasSpeech = false.obs;
-  bool _logEvents = false;
-  bool _onDevice = false;
   double level = 0.0;
   double minSoundLevel = 50000;
   double maxSoundLevel = -50000;
@@ -69,12 +61,9 @@ class AuthController extends GetxController {
   final lastWords = ''.obs;
   final lastError = ''.obs;
   String lastStatus = '';
-  String _currentLocaleId = '';
-  List<LocaleName> _localeNames = [];
 
   Timer? _timer;
-  Duration _delay = Duration(seconds: 3);
-
+  final Duration _delay = const Duration(seconds: 3);
   late LLMRepository _llmRepo;
 
   AuthController() {
