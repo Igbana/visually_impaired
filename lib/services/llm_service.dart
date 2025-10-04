@@ -12,9 +12,10 @@ class LLMService {
   }
 
   Future<BotMessage> getResponse(String body) async {
-    const apiKey = "AIzaSyDcIqGkzrc2ZejrhsdWZpYKKF2EniOaAIM";
+    const apiKey = "AIzaSyBq64CqKjdCUASrVqqinMNCoxbde9enrCM";
     final uri = Uri.parse(
-            'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent')
+            // 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent')
+            'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent')
         .replace(queryParameters: {
       'key': apiKey,
     });
