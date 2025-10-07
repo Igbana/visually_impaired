@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:siri_wave/siri_wave.dart';
-import 'package:visually_impaired/services/speech_service.dart';
-import '../../global_widget/speech_to_text_ultra.dart';
 import '../controllers/auth_controller.dart';
 
 class AuthView extends GetView<AuthController> {
@@ -10,7 +8,6 @@ class AuthView extends GetView<AuthController> {
 
   @override
   Widget build(BuildContext context) {
-    // Get.find<SpeechService>().startListening();
     return Scaffold(
       bottomNavigationBar: Container(
         height: 40,
