@@ -3,9 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:visually_impaired/modules/global_widget/text_field.dart';
-
 import '../../global_widget/block_button_widget.dart';
-import '../../global_widget/selection_field.dart';
 import '../controllers/auth_controller.dart';
 
 class RegisterView extends StatelessWidget {
@@ -72,68 +70,6 @@ class RegisterView extends StatelessWidget {
                               hintText: "John Doe",
                               style: Get.textTheme.headlineMedium,
                             ),
-                            // Text(
-                            //   "Welcome",
-                            //   style: Get.textTheme.displayMedium,
-                            // ),
-                            // SizedBox(
-                            //   height: size.height * 0.03,
-                            // ),
-                            // CustomTextField(
-                            //     controller: controller.nameController,
-                            //     labelText: "Full Name",
-                            //     hintText: "John Doe"),
-                            // const SizedBox(
-                            //   height: 20,
-                            // ),
-                            // CustomTextField(
-                            //     controller: controller.phoneController,
-                            //     labelText: "Phone Number",
-                            //     hintText: "08012345678"),
-                            // const SizedBox(
-                            //   height: 20,
-                            // ),
-                            // CustomTextField(
-                            //     controller: controller.stateController,
-                            //     labelText: "State of Origin",
-                            //     hintText: "Niger State"),
-                            /*PasswordField(
-                          controller: controller.passwordController,
-                          hintText: "Password",
-                          enabled: true,
-                        ),*/
-                            // const SizedBox(
-                            //   height: 16,
-                            // ),
-                            // BlockButtonWidget(
-                            //   onPressed: () {
-                            //     controller.register();
-                            //   },
-                            //   color: Get.theme.colorScheme.secondary,
-                            //   width: double.infinity,
-                            //   padding: const EdgeInsets.symmetric(vertical: 16),
-                            //   text: Text(
-                            //     "Sign up".tr,
-                            //     style: Get.textTheme.titleLarge
-                            //         ?.merge(TextStyle(color: Get.theme.primaryColor)),
-                            //   ),
-                            // ).paddingSymmetric(vertical: 35),
-                            // RichText(
-                            //     textAlign: TextAlign.center,
-                            //     text: TextSpan(children: [
-                            //       TextSpan(
-                            //           text: "Already have an account?  ",
-                            //           style: Get.textTheme.bodySmall),
-                            //       TextSpan(
-                            //           text: "Sign in",
-                            //           style: Get.textTheme.bodySmall?.copyWith(
-                            //               decoration: TextDecoration.underline),
-                            //           recognizer: TapGestureRecognizer()
-                            //             ..onTap = () {
-                            //               // openUrl(tos);
-                            //               controller.screenIndex.value = 0;
-                            //             }),
-                            //     ])),
                           ],
                         ),
                         Column(
@@ -159,99 +95,16 @@ class RegisterView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "What is your state of origin?",
+                              "What is your department?",
                               style: Get.textTheme.displayLarge,
                             ),
                             const SizedBox(
                               height: 20,
                             ),
                             CustomTextField(
-                              controller: controller.stateController,
-                              hintText: "08012345678",
+                              controller: controller.deptController,
+                              hintText: "Computer Engineering",
                               style: Get.textTheme.headlineMedium,
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "What difficulty level suits you best?",
-                              style: Get.textTheme.displayLarge,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Obx(() {
-                                return SelectionField(
-                                  options: controller.difficultyLevels,
-                                  selectedValue: controller.difficultyLevel.value,
-                                  onValueChanged: (value) => controller.difficultyLevel.value = value!,
-                                );
-                              }
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "How fast would you prefer me to talk?",
-                              style: Get.textTheme.displayLarge,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Obx(() {
-                                return SelectionField(
-                                  options: controller.speechSpeeds,
-                                  selectedValue: controller.speechSpeed.value,
-                                  onValueChanged: (value) => controller.speechSpeed.value = value!,
-                                );
-                              }
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "What type of feedback helps you learn best?",
-                              style: Get.textTheme.displayLarge,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Obx(() {
-                                return SelectionField(
-                                  options: controller.feedbackTypes,
-                                  selectedValue: controller.feedbackType.value,
-                                  onValueChanged: (value) => controller.feedbackType.value = value!,
-                                );
-                              }
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Do you have any other preference you would like me to know?",
-                              style: Get.textTheme.headlineMedium,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            CustomTextField(
-                              controller: controller.phoneController,
-                              hintText: "I would like...",
-                              style: Get.textTheme.headlineMedium,
-                              maxLines: 5,
-                              keyboardType: TextInputType.multiline,
                             ),
                           ],
                         ),
@@ -311,8 +164,7 @@ class RegisterView extends StatelessWidget {
                             ),
                           );
                         }
-                        }
-                      ),
+                      }),
                     ],
                   ).paddingSymmetric(vertical: 35)
                 ],

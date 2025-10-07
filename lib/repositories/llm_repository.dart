@@ -17,8 +17,12 @@ class LLMRepository {
   }
 
   Future<BotMessage> respond(
-      String message, String screen, List<String> actions) async {
+    String message,
+    String screen,
+    List<String> actions,
+  ) async {
     messages.clear();
+    print("Respond is called");
     messages.insert(
         0,
         UserMessage(
@@ -43,6 +47,7 @@ class LLMRepository {
   }
 
   String getGeminiPrompt(String screen, List<String> actions) {
+    
     return json.encode({
       "contents": [...messages.reversed.map((e) => e.toJson())],
       "systemInstruction": {
