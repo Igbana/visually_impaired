@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:visually_impaired/models/message.dart';
-import 'package:visually_impaired/prompts/old_auth.dart';
+import 'package:visually_impaired/prompts/auth.dart';
 import 'package:visually_impaired/services/llm_service.dart';
 import 'package:visually_impaired/services/speech_service.dart';
 
@@ -32,12 +32,12 @@ class LLMRepository {
       final message =
           await llmService.getResponse(getGeminiPrompt(screen, actions));
       // messages.insert(0, message);
-      speechService.speak(message.message);
+      await speechService.speak(message.message);
       return message;
     } catch (e) {
       Get.log(e.toString()); // Speak out the error
       messages.removeLast();
-      speechService.speak(e.toString());
+      await speechService.speak(e.toString());
     }
     return BotMessage();
   }
@@ -53,7 +53,7 @@ class LLMRepository {
       "systemInstruction": {
         "role": "user",
         "parts": [
-          {"text": auth(screen, actions)}
+          {"text": prompt(screen, actions)}
         ]
       },
       "generationConfig": {

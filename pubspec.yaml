@@ -52,6 +52,7 @@ dependencies:
   http: ^1.2.2
   url_launcher: ^6.3.1
   lottie: 
+  syncfusion_flutter_pdfviewer: ^31.1.23
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +80,7 @@ flutter:
   assets:
    - .env
    - assets/svg/
+   - assets/doc/
    - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see

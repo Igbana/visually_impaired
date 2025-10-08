@@ -1,5 +1,6 @@
 class Routes {
   static const AUTH = '/auth';
+  static const READER = '/reader';
   static const LOGIN = '/login';
   static const REGISTER = '/register';
   static const FORGOT_PASSWORD = '/forgot_password';

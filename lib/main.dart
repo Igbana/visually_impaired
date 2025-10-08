@@ -6,7 +6,6 @@ import 'package:visually_impaired/services/llm_service.dart';
 import 'package:visually_impaired/services/settings_service.dart';
 import 'package:visually_impaired/services/speech_service.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initServices();

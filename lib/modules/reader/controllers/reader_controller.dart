@@ -1,26 +1,18 @@
 import 'dart:async';
 import 'package:get/get.dart';
-import '../views/register.dart';
-import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:siri_wave/siri_wave.dart';
 import 'package:visually_impaired/common/helper.dart';
 import 'package:visually_impaired/models/message.dart';
 import 'package:visually_impaired/services/llm_service.dart';
 import 'package:visually_impaired/services/speech_service.dart';
-import 'package:visually_impaired/modules/auth/views/login.dart';
 import 'package:visually_impaired/repositories/llm_repository.dart';
 import 'package:visually_impaired/modules/auth/controllers/actions.dart';
 
-class AuthController extends GetxController {
-  AuthController() {
+class ReaderController extends GetxController {
+  ReaderController() {
     _llmRepo = LLMRepository();
-    screens = [
-      const SplashView(),
-      LoginView(controller: this),
-      RegisterView(controller: this),
-      const SuccessView(),
-    ];
+    screens = [];
   }
 
   final hidePassword = true.obs;
@@ -28,10 +20,6 @@ class AuthController extends GetxController {
   final remember = false.obs;
   final pageIndex = 0.obs;
 
-  final nameController = TextEditingController();
-  final phoneController = TextEditingController();
-  final deptController = TextEditingController();
-  final userIdController = TextEditingController();
   final pageController = PageController();
   final waveController = IOS9SiriWaveformController(
     amplitude: 1,
@@ -43,9 +31,6 @@ class AuthController extends GetxController {
 
   late List screens;
   final screenIndex = 0.obs;
-  double level = 0.0;
-  double minSoundLevel = 50000;
-  double maxSoundLevel = -50000;
   final isListening = false.obs;
   final lastWords = ''.obs;
   final lastError = ''.obs;
@@ -58,16 +43,16 @@ class AuthController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    done("Hi");
-    Get.find<SpeechService>().startListening();
-    Get.find<SpeechService>().streamData.listen((data) {
-      Get.log(
-          'Live Text: ${data.liveResponse}, Final Text: ${data.entireResponse}, isListening: ${data.isListening}',
-          isError: data.isListening);
-      if (data.liveResponse != lastWords.value) done(data.liveResponse);
-      lastWords.value = data.liveResponse;
-      isListening.value = data.isListening;
-    });
+    // done("NEWPAGE");
+    //   Get.find<SpeechService>().startListening();
+    //   Get.find<SpeechService>().streamData.listen((data) {
+    //     Get.log(
+    //         'Live Text: ${data.liveResponse}, Final Text: ${data.entireResponse}, isListening: ${data.isListening}',
+    //         isError: data.isListening);
+    //     if (data.liveResponse != lastWords.value) done(data.liveResponse);
+    //     lastWords.value = data.liveResponse;
+    //     isListening.value = data.isListening;
+    //   });
   }
 
   void done(String text) {
@@ -130,23 +115,6 @@ class AuthController extends GetxController {
           curve: Curves.ease,
         );
         break;
-      case "ENTER_USER_ID":
-        userIdController.text = message.input;
-        login();
-        // screenIndex.value = 3;
-        break;
-      case "ENTER_FULL_NAME":
-        nameController.text = message.input;
-        register();
-        break;
-      case "ENTER_PHONE":
-        phoneController.text = message.input;
-        register();
-        break;
-      case "ENTER_DEPARTMENT":
-        deptController.text = message.input;
-        register();
-        break;
       case "TERMS":
         openTos();
         break;
@@ -178,42 +146,6 @@ class AuthController extends GetxController {
     }
   }
 
-  void login() async {
-    if (userIdController.text.isNotEmpty) {
-      debugPrint(
-        "[DEBUG] Controller text: ${userIdController.text}",
-      );
-      screenIndex.value = 3;
-    }
-  }
-
-  void register() async {
-    List<TextEditingController> controllers = [
-      nameController,
-      phoneController,
-      deptController
-    ];
-    if (pageIndex.value != 2) {
-      if (controllers[pageIndex.value].text.isNotEmpty) {
-        debugPrint(
-          "[DEBUG] Controller text: ${controllers[pageIndex.value].text}",
-        );
-        pageController.nextPage(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.ease,
-        );
-        done("NEWPAGE");
-      }
-    } else {
-      if (controllers[pageIndex.value].text.isNotEmpty) {
-        debugPrint(
-          "[DEBUG] Controller text: ${controllers[pageIndex.value].text}",
-        );
-        screenIndex.value = 3;
-      }
-    }
-  }
-
   void sendResetLink() async {}
 
   void openTos() {
@@ -222,57 +154,5 @@ class AuthController extends GetxController {
 
   void openPrivacy() {
     Helper.openUrl("https://www.google.com");
-  }
-}
-
-class SuccessView extends StatelessWidget {
-  const SuccessView({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Stack(
-          alignment: AlignmentGeometry.center,
-          children: [
-            Lottie.asset('assets/congratulations.json'),
-            Text(
-              "Congratulations, You have successfully registered",
-              style: Get.textTheme.displayLarge,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class SplashView extends StatelessWidget {
-  const SplashView({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Stack(
-          alignment: AlignmentGeometry.center,
-          children: [
-            Lottie.asset('assets/congratulations.json'),
-            Text(
-              "Hello, Welcome to VI Assistant",
-              style: Get.textTheme.displayLarge,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

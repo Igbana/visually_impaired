@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:visually_impaired/modules/global_widget/text_field.dart';
+
 import '../../global_widget/block_button_widget.dart';
 import '../controllers/auth_controller.dart';
 

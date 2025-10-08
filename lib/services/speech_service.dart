@@ -111,7 +111,7 @@ class SpeechService extends GetxService {
       isListening.value = false;
     }
     if (text.isNotEmpty && text != "null") {
-    debugPrint("[BOT] $text");
+      debugPrint("[BOT] $text");
       await flutterTts.speak(text);
     }
   }
@@ -152,8 +152,8 @@ class SpeechService extends GetxService {
   }
 
   void stopListening() {
-    speech.stop();
     isListening.value = false;
+    speech.stop();
     entireResponse = '$entireResponse $chunkResponse';
     _streamcontroller.sink.add(SpeechData(
       liveResponse: liveResponse,

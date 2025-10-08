@@ -4,22 +4,23 @@ class ScreenAction {
     "SIGNUP",
   ];
   static List<String> signup(int pageIndex) {
-    List<String> _login = [
+    List<String> signin = [
       "TERMS (Optional)",
       "PRIVACY (Optional)",
-      "SIGNUP (Optional)",
+      "LOGIN (Optional)",
     ];
-    List<String> _subPages = [
-      "ENTER_FULL_NAME",
-      "ENTER_PHONE",
-      "ENTER_DEPARTMENT",
+    List<String> subPages = [
+      "ENTER_FULL_NAME (Default)",
+      "ENTER_PHONE (Default)",
+      "ENTER_DEPARTMENT (Default)",
     ];
-    _login.add(_subPages[pageIndex]);
-    return _login;
+    signin.add(subPages[pageIndex]);
+    pageIndex > 0 ? signin.add("GO_BACK (Optional)") : null;
+    return signin;
   }
 
   static const List<String> login = [
-    "ENTER_USER",
+    "ENTER_USER_ID (Default)",
     "TERMS (Optional)",
     "PRIVACY (Optional)",
     "SIGNUP (Optional)",
