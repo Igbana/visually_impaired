@@ -125,7 +125,7 @@ class Ui {
   }
 
   static Icon getStarReview(double? rate, {double size = 18}) {
-    var icon;
+    Icon icon;
     rate ??= 0;
     if (rate == 5) {
       icon = Icon(Icons.star, size: size, color: const Color(0xFFFFB24D));

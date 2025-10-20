@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:typed_data';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:siri_wave/siri_wave.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:visually_impaired/common/helper.dart';
 import 'package:visually_impaired/models/message.dart';
 import 'package:visually_impaired/services/llm_service.dart';
@@ -43,16 +46,7 @@ class ReaderController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    // done("NEWPAGE");
-    //   Get.find<SpeechService>().startListening();
-    //   Get.find<SpeechService>().streamData.listen((data) {
-    //     Get.log(
-    //         'Live Text: ${data.liveResponse}, Final Text: ${data.entireResponse}, isListening: ${data.isListening}',
-    //         isError: data.isListening);
-    //     if (data.liveResponse != lastWords.value) done(data.liveResponse);
-    //     lastWords.value = data.liveResponse;
-    //     isListening.value = data.isListening;
-    //   });
+    readDoc(1);
   }
 
   void done(String text) {
@@ -67,11 +61,6 @@ class ReaderController extends GetxController {
           null;
         }
         Get.find<LLMService>().loading.value = true;
-        // action(await _llmRepo.respond(text, getScreen(), getActions()));
-        // Get.log('Responded');
-        // Get.find<LLMService>().loading.value = false;
-        // isListening.value = true;
-        // Get.find<SpeechService>().startListening();
         await _llmRepo.respond(text, getScreen(), getActions()).then((resp) {
           action(resp);
           Get.log('Responded');
@@ -86,6 +75,43 @@ class ReaderController extends GetxController {
       }
       _timer = null;
     });
+  }
+
+  void readDoc(int page) async {
+    final Uint8List bytes = await loadPdfAsset('assets/doc/CIT101.pdf');
+    final PdfDocument document = PdfDocument(inputBytes: bytes);
+    List textItems = PdfTextExtractor(document)
+        .extractText(
+          startPageIndex: 3,
+          endPageIndex: 4,
+        )
+        .replaceAll("\n", "")
+        .split(" ");
+    String text = "";
+    for (String txt in textItems) {
+      if (txt.isBlank ?? false) {
+        txt = ".";
+      }
+      for (String i in txt.split("")) {
+        if (i.isBlank ?? false) {
+          txt = txt.replaceAll(i, "");
+        }
+      }
+      text += txt == "." ? "." : " $txt";
+    }
+    Get.find<SpeechService>().interruptibleSpeak(text);
+    Timer(
+      const Duration(seconds: 5),
+      () => Get.find<SpeechService>().interrupt(),
+    );
+    Get.find<SpeechService>().interruptibleSpeak("What could be the problem?");
+    document.dispose();
+  }
+
+  Future<Uint8List> loadPdfAsset(String assetPath) async {
+    return await DefaultAssetBundle.of(Get.context!).load(assetPath).then(
+          (data) => data.buffer.asUint8List(),
+        );
   }
 
   void action(BotMessage message) {

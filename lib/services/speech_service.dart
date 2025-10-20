@@ -71,7 +71,7 @@ class SpeechService extends GetxService {
   }
 
   Future<void> initTts() async {
-    await flutterTts.awaitSpeakCompletion(true);
+    await flutterTts.awaitSpeakCompletion(false);
 
     flutterTts.setStartHandler(() {
       debugPrint("Playing");
@@ -116,6 +116,20 @@ class SpeechService extends GetxService {
     }
   }
 
+  void interruptibleSpeak(String text) => flutterTts.speak(text);
+  void interrupt() => flutterTts.stop();
+
+  Future<void> stop() async {
+    try {
+      debugPrint("[DEBUG] Shutup is called");
+      await speech.stop();
+      debugPrint("[DEBUG] Shutup");
+      isListening.value = true;
+    } catch (e) {
+      print("Wasn't able to shutup");
+    }
+  }
+
   void startListening() async {
     debugPrint("[DEBUG] Listen is called");
     if (isAvailable) {
@@ -128,24 +142,29 @@ class SpeechService extends GetxService {
         isListening: isListening.value,
       ));
       await speech.stop();
-      await Future.delayed(const Duration(milliseconds: 50));
-      await speech.listen(
-        listenOptions: SpeechListenOptions(
-          listenMode: ListenMode.dictation,
-          onDevice: true,
-        ),
-        onResult: (result) {
-          liveResponse = result.recognizedWords;
-          if (result.finalResult) {
-            chunkResponse = result.recognizedWords;
-          }
-          _streamcontroller.sink.add(SpeechData(
-            liveResponse: liveResponse,
-            entireResponse: entireResponse,
-            isListening: isListening.value,
-          ));
-        },
-      );
+      try {
+        await Future.delayed(const Duration(milliseconds: 500));
+        await speech.listen(
+          listenOptions: SpeechListenOptions(
+            listenMode: ListenMode.dictation,
+            onDevice: true,
+          ),
+          onResult: (result) {
+            liveResponse = result.recognizedWords;
+            debugPrint("[DEBUG] Final result? ${result.finalResult}");
+            if (result.finalResult) {
+              chunkResponse = result.recognizedWords;
+            }
+            _streamcontroller.sink.add(SpeechData(
+              liveResponse: liveResponse,
+              entireResponse: entireResponse,
+              isListening: isListening.value,
+            ));
+          },
+        );
+      } catch (e) {
+        debugPrint("[ERROR] $e");
+      }
     } else {
       debugPrint('Ultra Speech ERROR : Speech recognition not available');
     }

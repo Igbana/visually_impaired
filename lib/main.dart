@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+// import 'package:'
 import 'package:visually_impaired/routes/app_pages.dart';
 import 'package:visually_impaired/services/llm_service.dart';
 import 'package:visually_impaired/services/settings_service.dart';
@@ -24,7 +26,7 @@ void main() async {
 
 Future<void> initServices() async {
   Get.log('starting services ...');
-  // await dotenv.load();
+  await dotenv.load(fileName: ".env");
   await GetStorage.init();
   await Get.putAsync(() => SettingsService().init());
   await Get.putAsync(() => SpeechService().init());

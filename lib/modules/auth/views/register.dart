@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:visually_impaired/modules/global_widget/text_field.dart';
+import 'package:visually_impaired/modules/auth/views/form.dart';
 
 import '../../global_widget/block_button_widget.dart';
 import '../controllers/auth_controller.dart';
@@ -54,61 +54,31 @@ class RegisterView extends StatelessWidget {
                       controller: controller.pageController,
                       onPageChanged: (page) =>
                           controller.pageIndex.value = page,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "What is your full name?",
-                              style: Get.textTheme.displayLarge,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            CustomTextField(
-                              controller: controller.nameController,
-                              hintText: "John Doe",
-                              style: Get.textTheme.headlineMedium,
-                            ),
-                          ],
+                      children: const [
+                        FormPage(
+                          label: "What is your name?",
+                          hint: "John Doe",
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "What is your phone number?",
-                              style: Get.textTheme.displayLarge,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            CustomTextField(
-                              controller: controller.phoneController,
-                              hintText: "08012345678",
-                              style: Get.textTheme.headlineMedium,
-                            ),
-                          ],
+                        FormPage(
+                          label: "What is your User ID?",
+                          hint: "M1234567",
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "What is your department?",
-                              style: Get.textTheme.displayLarge,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            CustomTextField(
-                              controller: controller.deptController,
-                              hintText: "Computer Engineering",
-                              style: Get.textTheme.headlineMedium,
-                            ),
-                          ],
+                        FormPage(
+                          label: "What is your department?",
+                          hint: "Computer Engineering",
                         ),
+                        FormPage(
+                          label: "What is your phone number?",
+                          hint: "08012345678",
+                        ),
+                        FormPage(
+                          label: "Enter your password",
+                          hint: "Not less than 6 characters",
+                        ),
+                        FormPage(
+                          label: "Confirm password",
+                          hint: "Not less than 6 characters",
+                        )
                       ],
                     ),
                   ),

@@ -32,7 +32,7 @@ class LLMRepository {
       final message =
           await llmService.getResponse(getGeminiPrompt(screen, actions));
       // messages.insert(0, message);
-      await speechService.speak(message.message);
+      // await speechService.speak(message.message);
       return message;
     } catch (e) {
       Get.log(e.toString()); // Speak out the error

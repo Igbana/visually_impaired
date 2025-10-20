@@ -90,35 +90,36 @@ class Setting extends Model {
     enablePaymentBeforeAppointmentIsCompleted = boolFromJson(json, 'enable_payment_before_appointment_is_completed');
   }
 
+  @override
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['app_name'] = this.appName;
-    data['enable_stripe'] = this.enableStripe;
-    data['default_tax'] = this.defaultTax;
-    data['default_currency'] = this.defaultCurrency;
-    data['fcm_key'] = this.fcmKey;
-    data['enable_paypal'] = this.enablePaypal;
-    data['main_color'] = this.mainColor;
-    data['default_theme'] = this.defaultTheme;
-    data['main_dark_color'] = this.mainDarkColor;
-    data['second_color'] = this.secondColor;
-    data['second_dark_color'] = this.secondDarkColor;
-    data['accent_color'] = this.accentColor;
-    data['accent_dark_color'] = this.accentDarkColor;
-    data['scaffold_dark_color'] = this.scaffoldDarkColor;
-    data['scaffold_color'] = this.scaffoldColor;
-    data['google_maps_key'] = this.googleMapsKey;
-    data['mobile_language'] = this.mobileLanguage;
-    data['default_country_code'] = this.defaultCountryCode;
-    data['app_version'] = this.appVersion;
-    data['jitsi_meet_link'] = this.jitsiMeetLink;
-    data['enable_version'] = this.enableVersion;
-    data['currency_right'] = this.currencyRight;
-    data['default_currency_decimal_digits'] = this.defaultCurrencyDecimalDigits;
-    data['enable_razorpay'] = this.enableRazorpay;
-    data['distance_unit'] = this.distanceUnit;
-    data['enable_otp'] = this.enableOtp;
-    data['enable_payment_before_appointment_is_completed'] = this.enablePaymentBeforeAppointmentIsCompleted;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['app_name'] = appName;
+    data['enable_stripe'] = enableStripe;
+    data['default_tax'] = defaultTax;
+    data['default_currency'] = defaultCurrency;
+    data['fcm_key'] = fcmKey;
+    data['enable_paypal'] = enablePaypal;
+    data['main_color'] = mainColor;
+    data['default_theme'] = defaultTheme;
+    data['main_dark_color'] = mainDarkColor;
+    data['second_color'] = secondColor;
+    data['second_dark_color'] = secondDarkColor;
+    data['accent_color'] = accentColor;
+    data['accent_dark_color'] = accentDarkColor;
+    data['scaffold_dark_color'] = scaffoldDarkColor;
+    data['scaffold_color'] = scaffoldColor;
+    data['google_maps_key'] = googleMapsKey;
+    data['mobile_language'] = mobileLanguage;
+    data['default_country_code'] = defaultCountryCode;
+    data['app_version'] = appVersion;
+    data['jitsi_meet_link'] = jitsiMeetLink;
+    data['enable_version'] = enableVersion;
+    data['currency_right'] = currencyRight;
+    data['default_currency_decimal_digits'] = defaultCurrencyDecimalDigits;
+    data['enable_razorpay'] = enableRazorpay;
+    data['distance_unit'] = distanceUnit;
+    data['enable_otp'] = enableOtp;
+    data['enable_payment_before_appointment_is_completed'] = enablePaymentBeforeAppointmentIsCompleted;
     return data;
   }
 }

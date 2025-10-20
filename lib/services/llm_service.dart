@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,18 +13,17 @@ class LLMService {
   }
 
   Future<BotMessage> getResponse(String body) async {
-    const apiKey = "AIzaSyBq64CqKjdCUASrVqqinMNCoxbde9enrCM";
-    final uri = Uri.parse(
-            // 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent')
-            'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent')
-        .replace(queryParameters: {
-      'key': apiKey,
-    });
+    final uri = Uri.parse(dotenv.env['BASE_URL']!).replace(
+      queryParameters: {
+        'key': dotenv.env['API_KEY']!,
+      },
+    );
     final response = await http.post(uri, body: body);
     if (response.statusCode == 200) {
       final Map data = json.decode(response.body);
       return BotMessage.fromJson(
-          json.decode(data['candidates'][0]['content']['parts'][0]['text']));
+        json.decode(data['candidates'][0]['content']['parts'][0]['text']),
+      );
     } else {
       throw Exception('Failed to load symbols');
     }

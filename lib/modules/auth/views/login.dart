@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:visually_impaired/modules/global_widget/block_button_widget.dart';
 import 'package:visually_impaired/modules/global_widget/text_field.dart';
-import '../../global_widget/block_button_widget.dart';
 import '../controllers/auth_controller.dart';
 
 class LoginView extends StatelessWidget {
@@ -46,126 +45,87 @@ class LoginView extends StatelessWidget {
                 ],
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    "Welcome Back",
-                    style: Get.textTheme.displayMedium,
-                  ),
-                  Text(
-                    "Please enter your details",
-                    style: Get.textTheme.bodySmall,
-                  ),
-                  SizedBox(
-                    height: size.height * 0.04,
-                  ),
-                  CustomTextField(
-                      controller: controller.userIdController,
-                      labelText: "User ID",
-                      hintText: "982516"),
-                  /*const SizedBox(
-                      height: 20,
+                  Expanded(
+                    child: PageView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      controller: controller.pageController,
+                      onPageChanged: (page) =>
+                          controller.pageIndex.value = page,
+                      children: [
+                        CustomTextField(
+                            controller: controller.userIdController,
+                            labelText: "User ID",
+                            hintText: "982516"),
+                        PasswordField(
+                          labelText: "Password",
+                          controller: controller.passwordController,
+                          hintText: "Password",
+                          enabled: true,
+                        ),
+                      ],
                     ),
-                    PasswordField(
-                      controller: controller.passwordController,
-                      hintText: "Password",
-                      enabled: true,
-                    ),*/
-                  const SizedBox(
-                    height: 20,
                   ),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Obx(() {
-                        return SizedBox.square(
-                          dimension: 24,
-                          child: Checkbox(
-                            value: controller.remember.value,
-                            onChanged: (value) {
-                              // if (authState != AuthState.idle) return;
-                              controller.remember.value = value ?? false;
-                            },
-                          ),
-                        );
+                        if (controller.pageIndex.value == 0) {
+                          return const SizedBox.shrink();
+                        } else {
+                          return SizedBox(
+                            width: 100,
+                            child: BlockButtonWidget(
+                              onPressed: () {
+                                controller.pageController.previousPage(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                              },
+                              color: Get.theme.colorScheme.secondary,
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              text: Text(
+                                "Prev".tr,
+                                style: Get.textTheme.titleLarge?.merge(
+                                    TextStyle(color: Get.theme.primaryColor)),
+                              ),
+                            ),
+                          );
+                        }
                       }),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      Text("Remember for 30 days",
-                          style: Get.textTheme.bodySmall),
                       const Spacer(),
-                      Text(
-                        "Forgot password",
-                        style: Get.textTheme.bodySmall,
-                      ),
+                      Obx(() {
+                        if (controller.pageIndex.value == 6) {
+                          return const SizedBox.shrink();
+                        } else {
+                          return SizedBox(
+                            width: 100,
+                            child: BlockButtonWidget(
+                              onPressed: () {
+                                // controller.register();
+                                controller.pageController.nextPage(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                              },
+                              color: Get.theme.colorScheme.secondary,
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              text: Text(
+                                "Next".tr,
+                                style: Get.textTheme.titleLarge?.merge(
+                                    TextStyle(color: Get.theme.primaryColor)),
+                              ),
+                            ),
+                          );
+                        }
+                      }),
                     ],
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  BlockButtonWidget(
-                    onPressed: () {
-                      controller.login();
-                    },
-                    color: Get.theme.colorScheme.secondary,
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    text: Text(
-                      "Sign in".tr,
-                      style: Get.textTheme.titleLarge
-                          ?.merge(TextStyle(color: Get.theme.primaryColor)),
-                    ),
-                  ).paddingSymmetric(vertical: 35),
-                  RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(children: [
-                        TextSpan(
-                            text: "Don't have an account?  ",
-                            style: Get.textTheme.bodySmall),
-                        TextSpan(
-                            text: "Sign up",
-                            style: Get.textTheme.bodySmall?.copyWith(
-                                decoration: TextDecoration.underline),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                controller.screenIndex.value = 1;
-                              }),
-                      ])),
+                  ).paddingSymmetric(vertical: 35)
                 ],
               ),
             ),
           ),
-          /*Obx(() {
-            return Text(controller.lastWords.value);
-          }
-          ),*/
-          const SizedBox(
-            height: 20,
-          ),
-          RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(style: Get.textTheme.bodySmall, children: [
-                TextSpan(
-                    text: "Terms of Service",
-                    style: Get.textTheme.bodySmall
-                        ?.copyWith(decoration: TextDecoration.underline),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        controller.openTos();
-                      }),
-                const TextSpan(
-                  text: "  |  ",
-                ),
-                TextSpan(
-                    text: "Privacy Policy",
-                    style: Get.textTheme.bodySmall
-                        ?.copyWith(decoration: TextDecoration.underline),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        controller.openPrivacy();
-                      }),
-              ])),
         ],
       ),
     );
