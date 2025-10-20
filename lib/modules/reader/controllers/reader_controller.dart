@@ -39,7 +39,9 @@ class ReaderController extends GetxController {
   String lastStatus = '';
 
   Timer? _timer;
+  Timer? _readerTimer;
   final Duration _delay = const Duration(seconds: 3);
+  final Duration _readerDelay = const Duration(seconds: 1);
   late LLMRepository _llmRepo;
 
   @override
@@ -49,7 +51,7 @@ class ReaderController extends GetxController {
     readDoc(1);
     Get.find<SpeechService>().streamData.listen((data) {
       print(data.liveResponse);
-      if (data.liveResponse == "wait") {
+      if (data.liveResponse.contains("wait")) {
         Get.find<SpeechService>().interrupt();
         print("Interrupted");
       }
@@ -93,11 +95,16 @@ class ReaderController extends GetxController {
   void readDoc(int page) async {
     final Uint8List bytes = await loadPdfAsset('assets/doc/CIT101.pdf');
     final PdfDocument document = PdfDocument(inputBytes: bytes);
+
+    // Readt the text, remove all line breaks and split by spaces
     List textItems = PdfTextExtractor(document)
         .extractText(startPageIndex: 3, endPageIndex: 4)
         .replaceAll("\n", "")
         .split(" ");
+    // Final text
     String text = "";
+
+    // Removing blank items in text
     for (String txt in textItems) {
       if (txt.isBlank ?? false) txt = ".";
       for (String i in txt.split("")) {
@@ -105,7 +112,38 @@ class ReaderController extends GetxController {
       }
       text += txt == "." ? "." : " $txt";
     }
-    Get.find<SpeechService>().interruptibleSpeak(text);
+
+    // Split text into Lines.
+    final List<String> sentences = text.split(".");
+    for (String sentence in sentences) {
+      Get.find<SpeechService>().interruptibleSpeak(sentence);
+      _readerTimer?.cancel();
+      _readerTimer = Timer(_readerDelay, () async {
+        
+        // if (text.isNotEmpty) {
+        //   Get.log('Thinking');
+        //   isListening.value = false;
+        //   try {
+        //     Get.find<SpeechService>().stopListening();
+        //   } catch (e) {
+        //     null;
+        //   }
+        //   Get.find<LLMService>().loading.value = true;
+        //   await _llmRepo.respond(text, getScreen(), getActions()).then((resp) {
+        //     action(resp);
+        //     Get.log('Responded');
+        //     Get.find<LLMService>().loading.value = false;
+        //     isListening.value = true;
+        //     try {
+        //       Get.find<SpeechService>().startListening();
+        //     } catch (e) {
+        //       null;
+        //     }
+        //   });
+        // }
+        _timer = null;
+      });
+    }
   }
 
   Future<Uint8List> loadPdfAsset(String assetPath) async {
