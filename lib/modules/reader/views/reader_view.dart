@@ -66,29 +66,29 @@ class ReaderView extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(style: Get.textTheme.bodySmall, children: [
-                  TextSpan(
-                      text: "Terms of Service",
-                      style: Get.textTheme.bodySmall
-                          ?.copyWith(decoration: TextDecoration.underline),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          controller.openTos();
-                        }),
-                  const TextSpan(
-                    text: "  |  ",
-                  ),
-                  TextSpan(
-                      text: "Privacy Policy",
-                      style: Get.textTheme.bodySmall
-                          ?.copyWith(decoration: TextDecoration.underline),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          controller.openPrivacy();
-                        }),
-                ])),
+            // RichText(
+            //     textAlign: TextAlign.center,
+            //     text: TextSpan(style: Get.textTheme.bodySmall, children: [
+            //       TextSpan(
+            //           text: "Terms of Service",
+            //           style: Get.textTheme.bodySmall
+            //               ?.copyWith(decoration: TextDecoration.underline),
+            //           recognizer: TapGestureRecognizer()
+            //             ..onTap = () {
+            //               controller.openTos();
+            //             }),
+            //       const TextSpan(
+            //         text: "  |  ",
+            //       ),
+            //       TextSpan(
+            //           text: "Privacy Policy",
+            //           style: Get.textTheme.bodySmall
+            //               ?.copyWith(decoration: TextDecoration.underline),
+            //           recognizer: TapGestureRecognizer()
+            //             ..onTap = () {
+            //               controller.openPrivacy();
+            //             }),
+            //     ])),
           ],
         ),
       ),

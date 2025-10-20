@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:siri_wave/siri_wave.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
-import 'package:visually_impaired/common/helper.dart';
 import 'package:visually_impaired/models/message.dart';
 import 'package:visually_impaired/services/llm_service.dart';
 import 'package:visually_impaired/services/speech_service.dart';
@@ -46,7 +45,21 @@ class ReaderController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    Get.find<SpeechService>().startListening();
     readDoc(1);
+    Get.find<SpeechService>().streamData.listen((data) {
+      print(data.liveResponse);
+      if (data.liveResponse == "wait") {
+        Get.find<SpeechService>().interrupt();
+        print("Interrupted");
+      }
+      Get.log(
+          'Live Text: ${data.liveResponse}, Final Text: ${data.entireResponse}, isListening: ${data.isListening}',
+          isError: data.isListening);
+      // if (data.liveResponse != lastWords.value) done(data.liveResponse);
+      lastWords.value = data.liveResponse;
+      isListening.value = data.isListening;
+    });
   }
 
   void done(String text) {
@@ -81,31 +94,18 @@ class ReaderController extends GetxController {
     final Uint8List bytes = await loadPdfAsset('assets/doc/CIT101.pdf');
     final PdfDocument document = PdfDocument(inputBytes: bytes);
     List textItems = PdfTextExtractor(document)
-        .extractText(
-          startPageIndex: 3,
-          endPageIndex: 4,
-        )
+        .extractText(startPageIndex: 3, endPageIndex: 4)
         .replaceAll("\n", "")
         .split(" ");
     String text = "";
     for (String txt in textItems) {
-      if (txt.isBlank ?? false) {
-        txt = ".";
-      }
+      if (txt.isBlank ?? false) txt = ".";
       for (String i in txt.split("")) {
-        if (i.isBlank ?? false) {
-          txt = txt.replaceAll(i, "");
-        }
+        if (i.isBlank ?? false) txt = txt.replaceAll(i, "");
       }
       text += txt == "." ? "." : " $txt";
     }
     Get.find<SpeechService>().interruptibleSpeak(text);
-    Timer(
-      const Duration(seconds: 5),
-      () => Get.find<SpeechService>().interrupt(),
-    );
-    Get.find<SpeechService>().interruptibleSpeak("What could be the problem?");
-    document.dispose();
   }
 
   Future<Uint8List> loadPdfAsset(String assetPath) async {
@@ -129,9 +129,6 @@ class ReaderController extends GetxController {
           done("NEWPAGE");
         }
         break;
-      case "FORGOT_PASS":
-        sendResetLink();
-        break;
       case "REMEMBER_PASS":
         remember.toggle();
         break;
@@ -140,12 +137,6 @@ class ReaderController extends GetxController {
           duration: const Duration(milliseconds: 300),
           curve: Curves.ease,
         );
-        break;
-      case "TERMS":
-        openTos();
-        break;
-      case "PRIVACY":
-        openPrivacy();
         break;
     }
   }
@@ -170,15 +161,5 @@ class ReaderController extends GetxController {
     } else {
       return "SIGNUP";
     }
-  }
-
-  void sendResetLink() async {}
-
-  void openTos() {
-    Helper.openUrl("https://www.facebook.com");
-  }
-
-  void openPrivacy() {
-    Helper.openUrl("https://www.google.com");
   }
 }
