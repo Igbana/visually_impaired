@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -119,7 +120,6 @@ class ReaderController extends GetxController {
       Get.find<SpeechService>().interruptibleSpeak(sentence);
       _readerTimer?.cancel();
       _readerTimer = Timer(_readerDelay, () async {
-        
         // if (text.isNotEmpty) {
         //   Get.log('Thinking');
         //   isListening.value = false;
