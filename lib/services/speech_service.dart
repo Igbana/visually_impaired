@@ -71,7 +71,7 @@ class SpeechService extends GetxService {
   }
 
   Future<void> initTts() async {
-    await flutterTts.awaitSpeakCompletion(false);
+    await flutterTts.awaitSpeakCompletion(true);
 
     flutterTts.setStartHandler(() {
       debugPrint("Playing");

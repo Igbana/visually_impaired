@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -40,7 +39,7 @@ class ReaderController extends GetxController {
   String lastStatus = '';
 
   Timer? _timer;
-  Timer? _readerTimer;
+  Timer? _talkbackTimer;
   final Duration _delay = const Duration(seconds: 3);
   final Duration _readerDelay = const Duration(seconds: 1);
   late LLMRepository _llmRepo;
@@ -50,19 +49,19 @@ class ReaderController extends GetxController {
     super.onInit();
     Get.find<SpeechService>().startListening();
     readDoc(1);
-    Get.find<SpeechService>().streamData.listen((data) {
-      print(data.liveResponse);
-      if (data.liveResponse.contains("wait")) {
-        Get.find<SpeechService>().interrupt();
-        print("Interrupted");
-      }
-      Get.log(
-          'Live Text: ${data.liveResponse}, Final Text: ${data.entireResponse}, isListening: ${data.isListening}',
-          isError: data.isListening);
-      // if (data.liveResponse != lastWords.value) done(data.liveResponse);
-      lastWords.value = data.liveResponse;
-      isListening.value = data.isListening;
-    });
+    // Get.find<SpeechService>().streamData.listen((data) {
+    //   print(data.liveResponse);
+    //   if (data.liveResponse.contains("wait")) {
+    //     Get.find<SpeechService>().interrupt();
+    //     print("Interrupted");
+    //   }
+    //   Get.log(
+    //       'Live Text: ${data.liveResponse}, Final Text: ${data.entireResponse}, isListening: ${data.isListening}',
+    //       isError: data.isListening);
+    //   // if (data.liveResponse != lastWords.value) done(data.liveResponse);
+    //   lastWords.value = data.liveResponse;
+    //   isListening.value = data.isListening;
+    // });
   }
 
   void done(String text) {
@@ -77,34 +76,26 @@ class ReaderController extends GetxController {
           null;
         }
         Get.find<LLMService>().loading.value = true;
-        await _llmRepo.respond(text, getScreen(), getActions()).then((resp) {
-          action(resp);
-          Get.log('Responded');
-          Get.find<LLMService>().loading.value = false;
-          isListening.value = true;
-          try {
-            Get.find<SpeechService>().startListening();
-          } catch (e) {
-            null;
-          }
-        });
+        // await _llmRepo.respond(text, getScreen(), getActions()).then((resp) {
+        //   action(resp);
+        //   Get.log('Responded');
+        //   Get.find<LLMService>().loading.value = false;
+        //   isListening.value = true;
+        //   try {
+        //     Get.find<SpeechService>().startListening();
+        //   } catch (e) {
+        //     null;
+        //   }
+        // });
+        print("Pseudo respond");
       }
       _timer = null;
     });
   }
 
-  void readDoc(int page) async {
-    final Uint8List bytes = await loadPdfAsset('assets/doc/CIT101.pdf');
-    final PdfDocument document = PdfDocument(inputBytes: bytes);
-
-    // Readt the text, remove all line breaks and split by spaces
-    List textItems = PdfTextExtractor(document)
-        .extractText(startPageIndex: 3, endPageIndex: 4)
-        .replaceAll("\n", "")
-        .split(" ");
-    // Final text
+  String cleanText(String raw) {
+    List<String> textItems = raw.replaceAll("\n", "").split(" ");
     String text = "";
-
     // Removing blank items in text
     for (String txt in textItems) {
       if (txt.isBlank ?? false) txt = ".";
@@ -113,37 +104,35 @@ class ReaderController extends GetxController {
       }
       text += txt == "." ? "." : " $txt";
     }
+    return text;
+  }
 
-    // Split text into Lines.
+  void uninterruptedRead(String text) async {
     final List<String> sentences = text.split(".");
     for (String sentence in sentences) {
-      Get.find<SpeechService>().interruptibleSpeak(sentence);
-      _readerTimer?.cancel();
-      _readerTimer = Timer(_readerDelay, () async {
-        // if (text.isNotEmpty) {
-        //   Get.log('Thinking');
-        //   isListening.value = false;
-        //   try {
-        //     Get.find<SpeechService>().stopListening();
-        //   } catch (e) {
-        //     null;
-        //   }
-        //   Get.find<LLMService>().loading.value = true;
-        //   await _llmRepo.respond(text, getScreen(), getActions()).then((resp) {
-        //     action(resp);
-        //     Get.log('Responded');
-        //     Get.find<LLMService>().loading.value = false;
-        //     isListening.value = true;
-        //     try {
-        //       Get.find<SpeechService>().startListening();
-        //     } catch (e) {
-        //       null;
-        //     }
-        //   });
-        // }
-        _timer = null;
+      await Get.find<SpeechService>().speak(sentence);
+      Get.find<SpeechService>().streamData.listen((data) {
+        debugPrint(data.liveResponse);
+        data.liveResponse.isNotEmpty ? _talkbackTimer?.cancel() : null;
+        if (data.liveResponse != lastWords.value) done(data.liveResponse);
+        lastWords.value = data.liveResponse;
+        isListening.value = data.isListening;
+      });
+      _talkbackTimer = Timer(_readerDelay, () {
+        return;
       });
     }
+  }
+
+  void readDoc(int page) async {
+    final Uint8List bytes = await loadPdfAsset('assets/doc/CIT101.pdf');
+    final PdfDocument document = PdfDocument(inputBytes: bytes);
+    String rawText = PdfTextExtractor(document).extractText(
+      startPageIndex: 3,
+      endPageIndex: 4,
+    );
+    String text = cleanText(rawText);
+    uninterruptedRead(text);
   }
 
   Future<Uint8List> loadPdfAsset(String assetPath) async {

@@ -56,7 +56,7 @@ class LLMRepository {
                 ? {
                     "inline_data": {
                       "mime_type": "application/pdf",
-                      "data": base64Encode(pdf!)
+                      "data": base64Encode(pdf)
                     }
                   }
                 : null,
